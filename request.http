@@ -1,0 +1,6 @@
+Post http://localhost:3900/user/login
+Content-Type: application/json
+
+{
+    "mobile" : "09027587566"
+}
