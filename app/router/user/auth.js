@@ -64,6 +64,26 @@ router.post("/get-otp", UserAuthController.getOtp)
  */
 
 router.post("/check-otp", UserAuthController.checkOtp)
+
+// refresh token
+/**
+ * @swagger
+ *  /user/refresh-token:
+ *      post:
+ *          tags: [User-Authentication]
+ *          summary: send refresh token for get new refresh token
+ *          description: fresh token
+ *          parameters:
+ *              -   in: body
+ *                  required: true
+ *                  type: string
+ *                  name: refreshToken
+ *          responses:
+ *              200:
+ *                  description: success
+ */
+router.post("/refresh-token", UserAuthController.refreshToken)
+
 module.exports = {
     UserAuthRoutes: router
 }

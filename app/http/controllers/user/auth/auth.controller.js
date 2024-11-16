@@ -1,6 +1,6 @@
 const createHttpError = require("http-errors");
 const { getOtpSchema, checkOtpSchema } = require("../../../validators/user/auth.schema");
-const { RandomNumberGenerator, SignAccessToken } = require("../../../../utils/functions");
+const { RandomNumberGenerator, SignAccessToken, VerifyRefreshToken, SignRefreshToken } = require("../../../../utils/functions");
 const { UserModel } = require("../../../../models/users");
 const { EXPIRES_IN, USER_ROLE } = require("../../../../utils/constans");
 const Controller = require("../../controller");
@@ -36,13 +36,33 @@ class UserAuthController extends Controller {
             const { mobile, code } = req.body;
             const user = await UserModel.findOne({ mobile });
             if (!user) throw createHttpError.NotFound("شماره موبایل یا کاربر یافت نشد")
-            if (user.otp.code !== code) throw createHttpError.Unauthorized("کد ارسال شده صحیح نمیباشد")
-            const now = Date.now();
-            if(+user.otp.expiresIn < now) throw createHttpError.Unauthorized("کد شما منقضی شده است")
+            if (user.otp.code != code) throw createHttpError.Unauthorized("کد ارسال شده صحیح نمیباشد")
+            const now = (new Date()).getTime();
+            if (+user.otp.expiresIn < now) throw createHttpError.Unauthorized("کد شما منقضی شده است")
             const accessToken = await SignAccessToken(user._id);
+            const refreshToken = await SignRefreshToken(user._id)
             return res.json({
                 data: {
-                    accessToken
+                    accessToken,
+                    refreshToken
+                }
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async refreshToken(req, res, next) {
+        try {
+            const { refreshToken } = req.body;
+            const mobile = await VerifyRefreshToken(refreshToken)
+            const user = await UserModel.findOne({ mobile })
+            const accessToken = await SignAccessToken(user._id)
+            const newRefreshToken = await SignRefreshToken(user._id)
+            return res.json({
+                data: {
+                    accessToken,
+                    refreshToken: newRefreshToken
                 }
             })
         } catch (error) {
@@ -53,7 +73,7 @@ class UserAuthController extends Controller {
     async saveUser(mobile, code) {
         let otp = {
             code,
-            expiresIn: EXPIRES_IN
+            expiresIn: (new Date().getTime() + 120000)
         }
         const result = await this.checkExistUser(mobile);
         if (result) {
