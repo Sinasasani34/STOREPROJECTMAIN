@@ -2,8 +2,10 @@ const createHttpError = require("http-errors");
 const jwt = require("jsonwebtoken");
 const { UserModel } = require("../models/users");
 const { Access_TOKEN_SECRET_KEY, Refresh_TOKEN_SECRET_KEY } = require("./constans");
-
+const fs = require("fs")
 const redisClient = require("./init-redis")
+const path = require("path")
+
 function RandomNumberGenerator() {
     return Math.floor((Math.random() * 90000) + 10000)
 }
@@ -34,7 +36,7 @@ function SignRefreshToken(userId) {
         };
         jwt.sign(payload, Refresh_TOKEN_SECRET_KEY, options, async (err, token) => {
             if (err) reject(createHttpError.InternalServerError("خطای سرور"))
-            await redisClient.SETEX(userId.toString(), 365*24*60*60 ,token);
+            await redisClient.SETEX(userId.toString(), 365 * 24 * 60 * 60, token);
             resolve(token)
         })
     })
@@ -49,7 +51,10 @@ function VerifyRefreshToken(token) {
             const { mobile } = payload || {};
             const user = await UserModel.findOne({ mobile }, { password: 0, token: 0, otp: 0, })
             if (!user) reject(createHttpError.Unauthorized("کاربر یا حساب کاربری یافت نشد"))
-            const refreshToken = await redisClient.get(user._id);
+            const refreshToken = await redisClient.get(user?._id || "Key_default");
+            if (!refreshToken) {
+                reject(createHttpError.Unauthorized("ورود مجدد به حساب کاربری انجام نشد"))
+            }
             if (token === refreshToken) {
                 return resolve(mobile)
             }
@@ -58,9 +63,19 @@ function VerifyRefreshToken(token) {
     })
 }
 
+function deleteFileInPublic(fileAddress) {
+    if (fileAddress) {
+        const pathFile = path.join(__dirname, "..", "..", "public", fileAddress)
+        if (fs.existsSync(pathFile)) {
+            fs.unlinkSync(pathFile)
+        }
+    }
+}
+
 module.exports = {
     RandomNumberGenerator,
     SignAccessToken,
     SignRefreshToken,
-    VerifyRefreshToken
+    VerifyRefreshToken,
+    deleteFileInPublic
 }

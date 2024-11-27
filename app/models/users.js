@@ -17,6 +17,11 @@ const Schemas = new mongoose.Schema({
     discount: { type: Number, default: 0 },
     brithday: { type: String },
     Roles: { type: [String], default: ["USER"] }
+}, {
+    timestamps: true,
+    toJSON: {
+        virtuals: true
+    }
 })
 
 module.exports = {
