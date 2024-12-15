@@ -1,12 +1,14 @@
 const express = require("express");
 const { default: mongoose } = require("mongoose");
 const path = require("path");
+require("dotenv").config();
 const { AllRoutes } = require("./router/router");
 const morgan = require("morgan");
 const createError = require("http-errors")
 const swaggerUI = require("swagger-ui-express");
 const swaggerJSDoc = require("swagger-jsdoc")
 const cors = require("cors")
+
 module.exports = class Application {
     #app = express();
     #DB_URL;
@@ -29,6 +31,7 @@ module.exports = class Application {
         this.#app.use(express.static(path.join(__dirname, "..", "public")))
         this.#app.use("/api-doc", swaggerUI.serve, swaggerUI.setup(swaggerJSDoc({
             swaggerDefinition: {
+                openapi: "3.0.0",
                 info: {
                     title: "Online Shop Store",
                     version: "1.0.0",
@@ -41,10 +44,20 @@ module.exports = class Application {
                 },
                 servers: [{
                     url: "http://localhost:3900"
-                }]
+                }],
+                components: {
+                    securitySchemes: {
+                        BearerAuth: {
+                            type: "http",
+                            scheme: "bearer",
+                            bearerFormat: "JWT",
+                        }
+                    }
+                },
+                security: [{ BearerAuth: [] }]
             },
             apis: ["./app/router/**/*.js"]
-        })))
+        }), { explorer: true }))
     }
     createServer() {
         const http = require("http");
@@ -53,10 +66,18 @@ module.exports = class Application {
         })
     }
     connectToMongoDB() {
+        mongoose.set("strictQuery", false);
         mongoose.connect(this.#DB_URL).then(() => {
             console.log("Connected to MongoDB");
         }).catch((err) => {
             console.log("error > " + err);
+        })
+
+        mongoose.connection.on("connected", () => {
+            console.log("Mongoose Connected to DB")
+        })
+        mongoose.connection.on("disconnected", () => {
+            console.log("Mongoose DisConnected to DB")
         })
         // closeing DB Connection
         process.on("SIGINT", async () => {

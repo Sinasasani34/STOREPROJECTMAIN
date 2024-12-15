@@ -1,135 +1,31 @@
-const { CategoryController } = require("../../http/controllers/admin/category.controller");
+const { CategoryController } = require("../../http/controllers/admin/category/category.controller");
 
 const router = require("express").Router();
 
-/**
- * @swagger
- *  /admin/category/add:
- *      post:
- *          tags: [Category(Admin-Panel)]
- *          summary: create new category title
- *          parameters: 
- *              -   in: formData
- *                  type: string
- *                  required: true
- *                  name: title
- *              -   in: formData
- *                  type: string
- *                  required: false
- *                  name: parent
- *          responses:
- *              201:
- *                  description: success
- */
+// adding category
 router.post("/add", CategoryController.addCategory)
-// فیلد پرنت هارو میکیرم
 
-/**
- * @swagger
- *  /admin/category/parents:
- *      get:
- *          tags: [Category(Admin-Panel)]
- *          summary: Get All parents of categorys or Category Heads
- *          responses: 
- *              200:
- *                  description: success
- */
+// get parent of category
 router.get("/parents", CategoryController.getAllParents)
-/**
- * @swagger
- *  /admin/category/children/{parent}:
- *      get:
- *          tags: [Category(Admin-Panel)]
- *          summary: Get All children of parents categorys or Category Heads
- *          parameters:
- *              -   in: path
- *                  name: parent
- *                  type: string
- *                  required: true
- *          responses: 
- *              200:
- *                  description: success
- */
+
+// get child of parents
 router.get("/children/:parent", CategoryController.getChildOfParents)
-/**
- * @swagger
- *  /admin/category/all:
- *      get:
- *          tags: [Category(Admin-Panel)]
- *          summary: Get All categories
- *          responses: 
- *              200:
- *                  description: success
- */
+
+// get all categories
 router.get("/all", CategoryController.getAllCategory)
-/**
- * @swagger
- *  /admin/category/remove/{id}:
- *      delete:
- *          tags: [Category(Admin-Panel)]
- *          summary: remove category with object-id
- *          parameters:
- *              -   in: path
- *                  name: id
- *                  type: string
- *                  required: true
- *          responses: 
- *              200:
- *                  description: success
- */
+
+// remove category
 router.delete("/remove/:id", CategoryController.removeCategory)
 
-/**
- * @swagger
- *  /admin/category/list-of-all:
- *      get:
- *          tags: [Category(Admin-Panel)]
- *          summary: get all categories without populate and nested structure
- *          responses: 
- *              200:
- *                  description: success
- */
+// get all category with out any populate 
 router.get("/list-of-all", CategoryController.getAllCategoryWithoutPopulate)
 
-/**
- * @swagger
- *  /admin/category/{id}:
- *      get:
- *          tags: [Category(Admin-Panel)]
- *          summary: find category with object-id
- *          parameters:
- *              -   in: path
- *                  name: id
- *                  type: string
- *                  required: true
- *          responses: 
- *              200:
- *                  description: success
- */
+// get one category with id
 router.get("/:id", CategoryController.getCategoryById)
-/**
- * @swagger
- *  /admin/category/update/{id}:
- *      patch:
- *          tags: [Category(Admin-Panel)]
- *          summary: update category title with object id
- *          parameters:
- *              -   in: path
- *                  name: id
- *                  type: string
- *                  required: true
- *              -   in: formData
- *                  name: title
- *                  type: string
- *                  required: true
- *          responses: 
- *              200:
- *                  description: success
- *              500:
- *                  description: InternalServerError
- */
+
+// update category
 router.patch("/update/:id", CategoryController.editCategoryTitle)
 
 module.exports = {
-    CategoryRoutes: router
+    AdminApiCategoryRouter: router,
 }

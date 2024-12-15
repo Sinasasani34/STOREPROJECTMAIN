@@ -1,8 +1,9 @@
 const createHttpError = require("http-errors");
-const { CategoryModel } = require("../../../models/categories");
-const Controller = require("../controller");
-const { addCategorySchema, updateCategorySchema } = require("../../validators/admin/category.schema");
+const { CategoryModel } = require("../../../../models/categories");
+const Controller = require("../../controller");
+const { addCategorySchema, updateCategorySchema } = require("../../../validators/admin/category.schema");
 const { default: mongoose } = require("mongoose");
+const { StatusCodes: httpStatus } = require("http-status-codes");
 
 class CategoryController extends Controller {
     async addCategory(req, res, next) {
@@ -13,9 +14,9 @@ class CategoryController extends Controller {
             if (!category) {
                 throw createHttpError.InternalServerError("خطای داخلی")
             }
-            return res.status(201).json({
+            return res.status(httpStatus.CREATED).json({
                 data: {
-                    statusCode: 201,
+                    statusCode: httpStatus.CREATED,
                     message: "دسته بندی با موفقیت افزوده شد"
                 }
             })
@@ -37,9 +38,9 @@ class CategoryController extends Controller {
             if (deleteResult.deletedCount == 0) {
                 throw createHttpError.InternalServerError("حذف دسته بندی انجام نشد")
             }
-            return res.status(200).json({
+            return res.status(httpStatus.OK).json({
                 data: {
-                    statusCode: 200,
+                    statusCode: httpStatus.OK,
                     message: "حذف دسته بندی با موفقیت انجام شد"
                 }
             })
@@ -58,9 +59,9 @@ class CategoryController extends Controller {
             if (resultOfUpdate.modifiedCount == 0) {
                 throw createHttpError.InternalServerError("بروزرسانی انجام نشد!!!")
             }
-            return res.status(200).json({
+            return res.status(httpStatus.OK).json({
                 data: {
-                    statusCode: 200,
+                    statusCode: httpStatus.OK,
                     message: "بروزرسانی با موفقیت انجام شد"
                 }
             })
@@ -121,9 +122,9 @@ class CategoryController extends Controller {
             // ])
 
             const categories = await CategoryModel.find({ parent: undefined }, { __v: 0 })
-            return res.status(200).json({
+            return res.status(httpStatus.OK).json({
                 data: {
-                    statusCode: 200,
+                    statusCode: httpStatus.OK,
                     categories
                 }
             })
@@ -157,7 +158,7 @@ class CategoryController extends Controller {
                     }
                 },
             ])
-            return res.status(200).json({
+            return res.status(httpStatus.OK).json({
                 data: {
                     category
                 }
@@ -170,9 +171,9 @@ class CategoryController extends Controller {
     async getAllParents(req, res, next) {
         try {
             const parents = await CategoryModel.find({ parent: undefined }, { __v: 0 })
-            return res.status(200).json({
+            return res.status(httpStatus.OK).json({
                 data: {
-                    statusCode: 200,
+                    statusCode: httpStatus.OK,
                     parents
                 }
             })
@@ -185,9 +186,9 @@ class CategoryController extends Controller {
         try {
             const { parent } = req.params;
             const children = await CategoryModel.find({ parent }, { __v: 0, parent: 0 })
-            return res.status(200).json({
+            return res.status(httpStatus.OK).json({
                 data: {
-                    statusCode: 200,
+                    statusCode: httpStatus.OK,
                     children
                 }
             })
@@ -207,9 +208,9 @@ class CategoryController extends Controller {
             const categories = await CategoryModel.aggregate([
                 { $match: {} }
             ])
-            return res.status(200).json({
+            return res.status(httpStatus.OK).json({
                 data: {
-                    statusCode: 200,
+                    statusCode: httpStatus.OK,
                     categories
                 }
             })

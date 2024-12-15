@@ -4,6 +4,7 @@ const { RandomNumberGenerator, SignAccessToken, VerifyRefreshToken, SignRefreshT
 const { UserModel } = require("../../../../models/users");
 const { ROLES } = require("../../../../utils/constans");
 const Controller = require("../../controller");
+const { StatusCodes: httpStatus } = require("http-status-codes");
 
 class UserAuthController extends Controller {
 
@@ -16,12 +17,10 @@ class UserAuthController extends Controller {
             const result = await this.saveUser(mobile, code)
             console.log(result)
             if (!result) throw createHttpError.Unauthorized("ورود شما انجام نشد")
-            return res.status(200).send({
+            return res.status(httpStatus.OK).send({
+                statusCode: httpStatus.OK,
                 data: {
-                    statusCode: 200,
-                    message: "کد اعتبارسنجی با موفقیت برای شما ارسال شد",
-                    code,
-                    mobile
+                    code, mobile
                 }
             });
         } catch (error) {
@@ -41,7 +40,8 @@ class UserAuthController extends Controller {
             if (+user.otp.expiresIn < now) throw createHttpError.Unauthorized("کد شما منقضی شده است")
             const accessToken = await SignAccessToken(user._id);
             const refreshToken = await SignRefreshToken(user._id)
-            return res.json({
+            return res.status(httpStatus.OK).json({
+                statusCode: httpStatus.OK,
                 data: {
                     accessToken,
                     refreshToken
@@ -59,7 +59,8 @@ class UserAuthController extends Controller {
             const user = await UserModel.findOne({ mobile })
             const accessToken = await SignAccessToken(user._id)
             const newRefreshToken = await SignRefreshToken(user._id)
-            return res.json({
+            return res.status(httpStatus.OK).json({
+                statusCode: httpStatus.OK,
                 data: {
                     accessToken,
                     refreshToken: newRefreshToken

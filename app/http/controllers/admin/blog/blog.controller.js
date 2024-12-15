@@ -1,9 +1,11 @@
 const createHttpError = require("http-errors");
-const { BlogModel } = require("../../../models/blogs");
-const { deleteFileInPublic } = require("../../../utils/functions");
-const { createBlogSchema } = require("../../validators/admin/blog.schema");
-const Controller = require("./../controller");
+const { BlogModel } = require("../../../../models/blogs");
+const { deleteFileInPublic } = require("../../../../utils/functions");
+const { createBlogSchema } = require("../../../validators/admin/blog.schema");
+const Controller = require("../../controller");
 const path = require("path");
+const { StatusCodes: httpStatus } = require("http-status-codes");
+
 class BlogController extends Controller {
     async createBlog(req, res, next) {
         try {
@@ -15,9 +17,9 @@ class BlogController extends Controller {
             const author = req.user._id;
             const blog = await BlogModel.create({ title, image, text, short_text, category, tags, author })
             // return res.json({ blogDataBody, image: req.body.image })
-            return res.status(201).json({
+            return res.status(httpStatus.CREATED).json({
+                statusCode: httpStatus.CREATED,
                 data: {
-                    statusCode: 201,
                     message: "ایجاد بلاگ با موفقیت انجام شد"
                 }
             })
@@ -26,13 +28,14 @@ class BlogController extends Controller {
             next(error)
         }
     }
+    
     async getOneBlogById(req, res, next) {
         try {
             const { id } = req.params;
             const blog = await this.findBlog(id);
-            return res.status(200).json({
+            return res.status(httpStatus.OK).json({
+                statusCode: httpStatus.OK,
                 data: {
-                    statusCode: 200,
                     blog
                 }
             })
@@ -40,6 +43,7 @@ class BlogController extends Controller {
             next(error)
         }
     }
+
     async getListOfBlogs(req, res, next) {
         try {
             const blogs = await BlogModel.aggregate([
@@ -85,9 +89,9 @@ class BlogController extends Controller {
                     }
                 }
             ])
-            return res.status(200).json({
+            return res.status(httpStatus.OK).json({
+                statusCode: httpStatus.OK,
                 data: {
-                    statusCode: 200,
                     blogs
                 }
             })
@@ -95,6 +99,7 @@ class BlogController extends Controller {
             next(error)
         }
     }
+
     async getCommentsOfBlog(req, res, next) {
         try {
 
@@ -102,6 +107,7 @@ class BlogController extends Controller {
             next(error)
         }
     }
+
     async deleteBlogById(req, res, next) {
         try {
             const { id } = req.params;
@@ -110,9 +116,9 @@ class BlogController extends Controller {
             if (result.deletedCount == 0) {
                 throw createHttpError.InternalServerError("عملیات حذف انجام نشد")
             }
-            return res.status(200).json({
+            return res.status(httpStatus.OK).json({
+                statusCode: httpStatus.OK,
                 data: {
-                    statusCode: 200,
                     message: "حذف مقاله با موفقیت انجام شد"
                 }
             })
@@ -120,6 +126,7 @@ class BlogController extends Controller {
             next(error)
         }
     }
+
     async updateBlogById(req, res, next) {
         try {
             const { id } = req.params;
@@ -132,26 +139,18 @@ class BlogController extends Controller {
             let nullishData = ["", " ", "0", 0, null, undefined]
             let blackListFields = ["bookMarks", "disLikes", "comments", "likes", "author"]
             Object.keys(data).forEach(key => {
-                if (blackListFields.includes(key)) {
-                    delete data[key]
-                }
-                if (typeof data[key] == "string") {
-                    data[key] = data[key].trim();
-                }
-                if (Array.isArray(data[key]) && Array.length > 0) {
-                    data[key] = data[key].map(item => item.trim())
-                }
-                if (nullishData.includes(data[key])) {
-                    delete data[key];
-                }
+                if (blackListFields.includes(key)) delete data[key]
+                if (typeof data[key] == "string") data[key] = data[key].trim()
+                if (Array.isArray(data[key]) && data.length > 0) data[key] = data[key].map(item => item.trim())
+                if (nullishData.includes(data[key])) delete data[key]
             })
             const updateResult = await BlogModel.updateOne({_id: id}, {$set: data})
             if (updateResult.modifiedCount == 0) {
                 throw createHttpError.InternalServerError("بروزرسانی انجام نشد")
             }
-            return res.status(200).json({
+            return res.status(httpStatus.OK).json({
+                statusCode: httpStatus.OK,
                 data: {
-                    statusCode: 200,
                     message: "بروزرسانی بلاگ با موفقیت انجام شد"
                 }
             })
