@@ -71,9 +71,10 @@ class EpisodeController extends Controller {
 
     async updateEpisode(req, res, next) {
         try {
-            const { episodeID } = req.params;
-            const episdoe = await this.getOneEpisode(episodeID)
+            const { episodeID } = req.params.episodeID;
+            const episode = await this.getOneEpisode(episodeID)
             const { filename, fileUploadPath } = await createEpisodeSchema.validateAsync(req.body);
+            console.log(episode)
             let blackListFields = ["_id"]
             if (filename && fileUploadPath) {
                 const fileAddress = path.join(fileUploadPath, filename)
@@ -89,12 +90,16 @@ class EpisodeController extends Controller {
             }
             const data = req.body;
             deleteInvalidPropertyInObject(data, blackListFields)
-            delete episdoe._id
+            const newEpisode = {
+                ...episode,
+                ...data
+            }
+            console.log(newEpisode)
             const editEpisodresult = await CourseModel.updateOne({
                 "chapters.episodes._id": episodeID
             }, {
                 $set: {
-                    "chapters.$.episodes": { ...data }
+                    "chapters.$.episodes": newEpisode
                 }
             })
             if (!editEpisodresult.modifiedCount) {
