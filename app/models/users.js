@@ -1,6 +1,6 @@
 const { default: mongoose } = require("mongoose");
 
-const Schemas = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
     first_name: { type: String },
     last_name: { type: String },
     username: { type: String, lowercase: true },
@@ -16,7 +16,7 @@ const Schemas = new mongoose.Schema({
     bills: { type: [], default: [] },
     discount: { type: Number, default: 0 },
     brithday: { type: String },
-    Roles: { type: [String], default: ["USER"] },
+    Role: { type: String, default: "USER" },
     Courses: { type: [mongoose.Types.ObjectId], ref: "course", default: [] }
 }, {
     timestamps: true,
@@ -25,6 +25,7 @@ const Schemas = new mongoose.Schema({
     }
 })
 
+UserSchema.index({ first_name: "text", last_name: "text", username: "text", mobile: "text", email: "text" })
 module.exports = {
-    UserModel: mongoose.model("users", Schemas)
+    UserModel: mongoose.model("users", UserSchema)
 }

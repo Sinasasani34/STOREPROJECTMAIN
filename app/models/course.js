@@ -1,5 +1,6 @@
 const { default: mongoose } = require("mongoose");
 const { commentSchema } = require("./public.schema");
+const { getTimeOfCourse } = require("../utils/functions");
 
 const Episod = new mongoose.Schema({
     title: { type: String, required: true },
@@ -32,12 +33,24 @@ const CourseSchema = new mongoose.Schema({
     teacher: { type: mongoose.Types.ObjectId, ref: "users", required: true },
     chapters: { type: [ChapterSchema], default: [] },
     students: { type: [mongoose.Types.ObjectId], default: [], ref: "user" }
+}, {
+    toJSON: { virtuals: true }
 })
 CourseSchema.index({
     title: "text",
     short_text: "text",
     text: "text"
 })
+
+CourseSchema.virtual("imageURL").get(function () {
+    return `${process.env.BASE_URL}:${process.env.APPLICATION_PORT}/${this.image}`
+})
+CourseSchema.virtual("totalTime").get(function () {
+    return getTimeOfCourse(this.chapters || [])
+})
+// CourseSchema.virtual("chapters.episodes.videoURL").get(function(){
+//     return `${process.env.BASE_URL}:${process.env.APPLICATION_PORT}/${this.chapters.episodes.videoAddress}`
+// })
 module.exports = {
     CourseModel: mongoose.model("course", CourseSchema)
 }

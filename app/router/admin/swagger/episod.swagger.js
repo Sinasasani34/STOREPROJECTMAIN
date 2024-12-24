@@ -37,25 +37,25 @@
  *                      description: the file of video
  *                      format: binary
  *          EditEpisode:
- *              type: object
+ *              type: object     
  *              properties:
- *                  title: 
+ *                  title:
  *                      type: string
  *                      description: the title of episode
  *                      example: ویدیو شماره یک - متغیر ها
- *                  text:
+ *                  text: 
  *                      type: string
  *                      description: the describe about this episode
- *                      example: در این قسمت به طور کامل در ....
- *                  type:
+ *                      example: توی این قسمت بطور کامل دررابطه با .... گفته شده
+ *                  type: 
  *                      type: string
- *                      description: select the episode type (unlock or lock)
+ *                      description: the episode type (unlock or lock)
  *                      enum:
  *                          -   unlock
  *                          -   lock
- *                  video:
+ *                  video: 
  *                      type: string
- *                      description: the file of video
+ *                      description: the file of video 
  *                      format: binary
  */
 
@@ -122,7 +122,7 @@
 
 /**
  * @swagger
- *  /admin/episode/edit/{episodeID}:
+ *  /admin/episode/update/{episodeID}:
  *      patch:
  *          tags: [Episode(Admin-Panel)]
  *          summary: edit episode of chapter
@@ -134,14 +134,14 @@
  *          requestBody:
  *              required: true
  *              content:
- *                  multipart/form-data:
+ *                  multipart/form-data: 
  *                      schema:
  *                          $ref: '#/components/schemas/EditEpisode'
  *          responses:
  *              201:
- *                  description: success
+ *                  description: success - created
  *                  content:
  *                      application/json:
- *                          schema:
+ *                          schema: 
  *                              $ref: '#/definitions/publicDefinition'
  */

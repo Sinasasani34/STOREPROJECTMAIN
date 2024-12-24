@@ -57,7 +57,7 @@
  * @swagger
  *  /admin/blogs:
  *      get:
- *          tags: [ Blog(AdminPanel)]
+ *          tags: [ Blog(Admin-Panel)]
  *          summary: get all blogs 
  *          responses: 
  *              200: 
@@ -68,7 +68,7 @@
  * @swagger
  *  /admin/blogs/add:
  *      post:
- *          tags: [ Blog(AdminPanel)]
+ *          tags: [ Blog(Admin-Panel)]
  *          summary: create blog document
  *          requestBody:
  *              required: true
@@ -86,7 +86,7 @@
  *  /admin/blogs/{id}:
  *      get:
  *          summary: get blog and populate with id 
- *          tags: [Blog(AdminPanel)]
+ *          tags: [Blog(Admin-Panel)]
  *          parameters:
  *              -   in: path
  *                  name: id
@@ -102,7 +102,7 @@
  *  /admin/blogs/{id}:
  *      delete:
  *          summary: remove blog with id 
- *          tags: [Blog(AdminPanel)]
+ *          tags: [Blog(Admin-Panel)]
  *          parameters:
  *              -   in: path
  *                  name: id
@@ -117,7 +117,7 @@
  * @swagger
  *  /admin/blogs/update/{id}:
  *      patch:
- *          tags: [ Blog(AdminPanel)]
+ *          tags: [ Blog(Admin-Panel)]
  *          summary: update  Blog document by id 
  *          consumes: 
  *              -   multipart/form-data

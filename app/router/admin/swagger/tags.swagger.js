@@ -1,18 +1,22 @@
 /**
  * @swagger
- *  tages: 
- *       -   name: Admin(Admin-Panel)
- *           descritption: action of admin (add, remove, edit, .......)
- *       -   name: Course(Admin-Panel)
- *           descritption: management course section like manage episode, course, chapter, ...
- *       -   name: Chapter(Admin-Panel)
- *           descritption: management chapter section 
- *       -   name: Episode(Admin-Panel)
- *           descritption: the videos of chapter section
- *       -   name: Product(Admin-Panel)
- *           descritption: management product routes
- *       -   name: Category(Admin-Panel)
- *           descritption: all methods and routes about category section
- *       -   name: Blog(Admin-Panel)
- *           descritption: make blog managment admin panel
+ *  tags:
+ *      -   name : Admin-Panel
+ *          description : action of admin (add, remove, edit  and any do)
+ *      -   name : RBAC(Admin-Panel)
+ *          description : RoleBaseAccessControll System 
+ *      -   name : Users(Admin-Panel)
+ *          description : managment users of website 
+ *      -   name : Course(Admin-Panel)
+ *          description : managment course section like manage episode, chapter and courses
+ *      -   name : Chapter(Admin-Panel)
+ *          description : managment Chapters section
+ *      -   name : Episode(Admin-Panel)
+ *          description : the videos(episode) of Chapter section
+ *      -   name: Product(Admin-Panel)
+ *          description : management product routes
+ *      -   name: Blog(Admin-Panel)
+ *          description: made blog managment admin panel 
+ *      -   name: Category(Admin-Panel)
+ *          description: all method and routes about category section
  */
