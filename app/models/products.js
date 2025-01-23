@@ -17,7 +17,7 @@ const ProductSchema = new mongoose.Schema({
     count: { type: Number },
     type: { type: String, required: true },
     format: { type: String },
-    supplier: { type: mongoose.Types.ObjectId, required: true },
+    supplier: { type: mongoose.Types.ObjectId, ref: "users", required: true },
     feture: {
         type: Object, default: {
             length: "",
@@ -29,10 +29,16 @@ const ProductSchema = new mongoose.Schema({
             madein: ""
         }
     },
+}, {
+    toJSON: {
+        virtuals: true
+    }
 })
 
 ProductSchema.index({ title: "text", short_text: "text", text: "text" })
-
+ProductSchema.virtual("imageURL").get(function () {
+    return `${process.env.BASE_URL}:${process.env.APPLICATION_PORT}/${this.images}`
+})
 module.exports = {
     ProductModel: mongoose.model("product", ProductSchema)
 }

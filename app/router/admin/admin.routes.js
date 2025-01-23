@@ -1,5 +1,5 @@
-const { checkPermission } = require("../../http/middlewares/permission.guard");
-const { PERMISSIONS } = require("../../utils/constans");
+// const { checkPermission } = require("../../http/middlewares/permission.guard");
+// const { PERMISSIONS } = require("../../utils/constans");
 const { AdminApiBlogRouter } = require("./blog");
 const { AdminApiCategoryRouter } = require("./category");
 const { AdminApiChapterRoutes } = require("./chapter");
@@ -13,33 +13,24 @@ const { AdminApiUserRouter } = require("./user");
 
 const router = require("express").Router();
 
-router.use("/category",
-    checkPermission([PERMISSIONS.CONTENT_MANAGER]),
-    AdminApiCategoryRouter)
-router.use("/blogs",
-    checkPermission([PERMISSIONS.TEACHER]),
-    AdminApiBlogRouter)
-router.use("/products",
-    checkPermission([PERMISSIONS.SUPPLIER,
-    PERMISSIONS.CONTENT_MANAGER
-    ]), AdminApiProductRouter)
-router.use("/courses",
-    checkPermission([PERMISSIONS.TEACHER]),
-    AdminApiCourseRouter)
-router.use("/chapter",
-    checkPermission([PERMISSIONS.TEACHER]),
-    AdminApiChapterRoutes)
-router.use("/episode",
-    checkPermission([PERMISSIONS.TEACHER]),
-    AdminApiEpisodeRouter)
-router.use("/user",
-    AdminApiUserRouter)
-router.use("/permission",
-    checkPermission([PERMISSIONS.ADMIN]),
-    AdminApiPermissionRouter)
-router.use("/role",
-    checkPermission(PERMISSIONS.ADMIN),
-    AdminApiRoleRouter)
+router.use("/category", AdminApiCategoryRouter)
+router.use("/blogs", AdminApiBlogRouter)
+router.use("/products", AdminApiProductRouter)
+router.use("/courses", AdminApiCourseRouter)
+router.use("/chapter", AdminApiChapterRoutes)
+router.use("/episode", AdminApiEpisodeRouter)
+router.use("/user", AdminApiUserRouter)
+router.use("/permission", AdminApiPermissionRouter)
+router.use("/role", AdminApiRoleRouter)
 module.exports = {
     AdminRoutes: router
 }
+
+// checkPermission([PERMISSIONS.CONTENT_MANAGER])
+// checkPermission([PERMISSIONS.TEACHER])
+// checkPermission([PERMISSIONS.SUPPLIER, PERMISSIONS.CONTENT_MANAGER])
+// checkPermission([PERMISSIONS.TEACHER])
+// checkPermission([PERMISSIONS.TEACHER])
+// checkPermission([PERMISSIONS.TEACHER])
+// checkPermission([PERMISSIONS.ALL])
+// checkPermission(PERMISSIONS.ADMIN)

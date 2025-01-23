@@ -1,0 +1,80 @@
+{
+    blogs{
+        _id
+        title
+        imageURL
+        short_text
+        text
+        author {
+            first_name
+            last_name
+        }
+        category {
+            title
+            _id
+        }
+    }
+}
+#  createing fregment
+{
+  blogs(category: "673c5b2f87a453ccba8c9688"){
+    ...blogFields
+  }
+  
+}
+fragment blogFields on BlogType {
+     _id
+        title
+        imageURL
+        short_text
+        text
+        author {
+            first_name
+            last_name
+        }
+        category {
+            title
+            _id
+        }
+  }
+
+
+# new 
+{
+  blogs(category: "673c5b2f87a453ccba8c9688"){
+    ...blogFields
+  }
+  
+}
+fragment blogFields on BlogType {
+     _id
+        title
+        imageURL
+        short_text
+        text
+  			comments {
+          comment
+          openToComment
+      		createdAt
+          user {
+            first_name
+          }
+          answers {
+            comment
+            user {
+              first_name
+              last_name
+            }
+            createdAt
+          }
+        }
+  			
+        author {
+            first_name
+            last_name
+        }
+        category {
+            title
+            _id
+        }
+  }

@@ -1,0 +1,27 @@
+mutation {
+  CreateCommentForBlog(comment:"salam dada", 
+    blogID:"674ac5ca4522167d0d033792",
+    parent:"678a199f8d610abbc9b092ac"){
+    statusCode
+    data
+  }
+}
+
+mutation {
+  CreateCommentForCourse(comment:"salam dada", 
+    courseID:"675e7097e103bdeb14f6f063",
+  	parent:"6790848457ce658a18078bff"){
+    statusCode
+    data
+    
+  }
+}
+
+mutation {
+  CreateCommentForProducts(comment:"تسبیح کاملا دانه های بی کیفیتی دارد و رنگش پاک میشود", 
+    productID:"674d58ad3d8522fc6ef888fa"){
+    statusCode
+    data
+    
+  }
+}

@@ -25,7 +25,9 @@ class EpisodeController extends Controller {
                 time,
                 videoAddress
             }
-            const createEpisodresult = await CourseModel.updateOne({ _id: courseID, "chapters._id": chapterID }, {
+            const createEpisodresult = await CourseModel.updateOne({
+                _id: courseID, "chapters._id": chapterID
+            }, {
                 $push: {
                     "chapters.$.episodes": episode
                 }

@@ -1,0 +1,61 @@
+{
+  products{
+    _id
+    title
+    imageURL
+    short_text
+    text
+    tags
+    supplier {
+      first_name
+      last_name
+    }
+    category {
+      title
+      _id
+    }
+    feture {
+      height
+      width
+      weight
+      colors
+      length
+    }
+  }
+}
+
+
+
+{
+  products{
+    _id
+    title
+    imageURL
+    short_text
+    text
+    tags
+    supplier {
+      first_name
+      last_name
+    }
+    comments{
+      _id
+      comment
+      user {
+        first_name
+        last_name
+      }
+    }
+    category {
+      title
+      _id
+    }
+    feture {
+      height
+      width
+      weight
+      colors
+      length
+    }
+  }
+}
