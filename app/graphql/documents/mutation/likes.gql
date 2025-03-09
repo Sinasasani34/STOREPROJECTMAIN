@@ -1,0 +1,29 @@
+# like product
+mutation{
+  likeProduct(
+    productID:"674d58ad3d8522fc6ef888fa"
+  ) {
+    statusCode
+    data
+  }
+}
+
+# like course
+mutation{
+  likeCourse(
+    courseID:"6752c514167d7035ff2d4c1b"
+  ) {
+    statusCode
+    data
+  }
+}
+# like blog
+
+mutation{
+  likeBlog(
+    blogID:"674438431f7479c225996493"
+  ) {
+    statusCode
+    data
+  }
+}

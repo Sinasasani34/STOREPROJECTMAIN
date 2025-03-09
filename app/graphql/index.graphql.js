@@ -4,7 +4,11 @@ const { ProductResolver } = require("./queries/product.resolver");
 const { CategoriesResolver, CategoryChiledResolver } = require("./queries/category.resolver");
 const { CourseResolver } = require("./queries/course.resolver");
 const { CreateCommentForBlog, CreateCommentForCourse, CreateCommentForProducts } = require("./mutations/comment.resolver");
-const { CommentType } = require("./typeDefs/comment.type");
+const { LikeProduct, LikeBlog, LikeCourse } = require("./mutations/likes.resolver");
+const { disLikeProduct, disLikeCourse, disLikeBlog } = require("./mutations/dislikes.resolver");
+const { BookmarkBlog, BookmarkCourse, BookmarkProduct } = require("./mutations/bookmark.resolver");
+const { GetBookmarkedBlogs, GetBookmarkedCourses, GetBookmarkedProducts, getUserBasket } = require("./queries/user.profile.resolver");
+const { AddProductToBasket, AddCourseToBasket, RemoveProductToBasket, RemoveCourseToBasket } = require("./mutations/basket.resolver");
 
 // get, get all, get by id, ... in query part
 const RootQuery = new GraphQLObjectType({
@@ -15,7 +19,10 @@ const RootQuery = new GraphQLObjectType({
         categories: CategoriesResolver,
         chiledOfCategory: CategoryChiledResolver,
         courses: CourseResolver,
-        // comments: CommentType
+        getUserBookMarkedBlogs: GetBookmarkedBlogs,
+        getUserBookMarkedCourses: GetBookmarkedCourses,
+        getUserBookMarkedProducts: GetBookmarkedProducts,
+        getUserBasket: getUserBasket
     }
 })
 
@@ -25,7 +32,20 @@ const RootMutation = new GraphQLObjectType({
     fields: {
         CreateCommentForBlog,
         CreateCommentForCourse,
-        CreateCommentForProducts
+        CreateCommentForProducts,
+        LikeProduct,
+        LikeCourse,
+        LikeBlog,
+        disLikeProduct,
+        disLikeCourse,
+        disLikeBlog,
+        BookmarkBlog,
+        BookmarkCourse,
+        BookmarkProduct,
+        AddProductToBasket,
+        AddCourseToBasket,
+        RemoveProductToBasket,
+        RemoveCourseToBasket
     }
 })
 

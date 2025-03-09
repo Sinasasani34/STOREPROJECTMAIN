@@ -16,7 +16,7 @@ const Episod = new mongoose.Schema({
 const ChapterSchema = new mongoose.Schema({
     title: { type: String, required: true },
     text: { type: String, default: "" },
-    episodes: { type: [Episod], default: [] }
+    episodes: { type: [Episod], default: [] },
 })
 const CourseSchema = new mongoose.Schema({
     title: { type: String, required: true },
@@ -26,9 +26,9 @@ const CourseSchema = new mongoose.Schema({
     tags: { type: [String], default: [] },
     category: { type: mongoose.Types.ObjectId, ref: "category", required: true },
     comments: { type: [commentSchema], default: [] },
-    likes: { type: [mongoose.Types.ObjectId], default: [] },
-    dislikes: { type: [mongoose.Types.ObjectId], default: [] },
-    bookmarks: { type: [mongoose.Types.ObjectId], default: [] },
+    likes: { type: [mongoose.Types.ObjectId], ref: "users",default: [] },
+    dislikes: { type: [mongoose.Types.ObjectId], ref: "users",default: [] },
+    bookmarks: { type: [mongoose.Types.ObjectId], ref: "users",default: [] },
     price: { type: Number, default: 0 },
     discount: { type: Number, default: 0 },
     type: { type: String, default: "free"/*free, cash, special */, required: true },

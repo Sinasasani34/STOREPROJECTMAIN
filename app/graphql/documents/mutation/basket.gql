@@ -1,0 +1,32 @@
+mutation {
+  AddProductToBasket(
+    productID: "674d58ad3d8522fc6ef888fa"
+  ){
+    statusCode
+    data
+  }
+}
+mutation {
+  AddCourseToBasket(
+    productID: "674d58ad3d8522fc6ef888fa"
+  ){
+    statusCode
+    data
+  }
+}
+
+mutation {
+  RemoveProductToBasket(
+    productID: "674d58ad3d8522fc6ef888fa"
+  ){
+    statusCode
+    data
+  }
+}
+
+mutation {
+RemoveCourseToBasket(courseID:"6752c514167d7035ff2d4c1b"){
+  statusCode
+  data
+}
+}

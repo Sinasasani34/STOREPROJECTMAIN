@@ -6,34 +6,13 @@
     short_text
     text
     tags
-    supplier {
-      first_name
-      last_name
-    }
-    category {
-      title
+    dislikes {
       _id
+      first_name
     }
-    feture {
-      height
-      width
-      weight
-      colors
-      length
+    likes {
+      first_name
     }
-  }
-}
-
-
-
-{
-  products{
-    _id
-    title
-    imageURL
-    short_text
-    text
-    tags
     supplier {
       first_name
       last_name

@@ -8,7 +8,9 @@ const createError = require("http-errors")
 const swaggerUI = require("swagger-ui-express");
 const swaggerJSDoc = require("swagger-jsdoc")
 const cors = require("cors")
-
+const expresseEjsLayouts = require("express-ejs-layouts");
+const { initialSocket } = require("./utils/initSocket");
+const { socketHandller } = require("./socket.io");
 module.exports = class Application {
     #app = express();
     #DB_URL;
@@ -17,6 +19,7 @@ module.exports = class Application {
         this.#PORT = PORT;
         this.#DB_URL = DB_URI;
         this.configApplication();
+        this.initTemplateEngin();
         this.connectToMongoDB();
         this.initRedis();
         this.createServer();
@@ -61,7 +64,10 @@ module.exports = class Application {
     }
     createServer() {
         const http = require("http");
-        http.createServer(this.#app).listen(this.#PORT, () => {
+        const server = http.createServer(this.#app)
+        const io = initialSocket(server);
+        socketHandller(io);
+        server.listen(this.#PORT, () => {
             console.log("run > http://localhost:" + this.#PORT);
         })
     }
@@ -88,7 +94,16 @@ module.exports = class Application {
     }
 
     initRedis() {
-        require("./utils/init-redis")
+        require("./utils/initRedis")
+    }
+
+    initTemplateEngin() {
+        this.#app.use(expresseEjsLayouts);
+        this.#app.set("view engine", "ejs");
+        this.#app.set("views", "resource/views");
+        this.#app.set("layout extractStyles", true)
+        this.#app.set("layout extractScripts", true)
+        this.#app.set("layout", "./layouts/master")
     }
 
     createRoutes() {
