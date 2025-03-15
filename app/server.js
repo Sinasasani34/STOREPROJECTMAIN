@@ -111,10 +111,9 @@ module.exports = class Application {
     }
 
     initClientSession() {
-        console.log(process.env.COOKIE_PARSER_SECRET_KEY)
-        this.#app.use(cookieParser(process.env.COOKIE_PARSER_SECRET_KEY))
+        this.#app.use(cookieParser(COOKIE_PARSER_SECRET_KEY))
         this.#app.use(session({
-            secret: process.env.COOKIE_PARSER_SECRET_KEY,
+            secret: COOKIE_PARSER_SECRET_KEY,
             resave: true,
             saveUninitialized: true,
             cookie: {
