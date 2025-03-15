@@ -11,6 +11,10 @@ const cors = require("cors")
 const expresseEjsLayouts = require("express-ejs-layouts");
 const { initialSocket } = require("./utils/initSocket");
 const { socketHandller } = require("./socket.io");
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
+const { COOKIE_PARSER_SECRET_KEY } = require("./utils/constans");
+
 module.exports = class Application {
     #app = express();
     #DB_URL;
@@ -104,6 +108,18 @@ module.exports = class Application {
         this.#app.set("layout extractStyles", true)
         this.#app.set("layout extractScripts", true)
         this.#app.set("layout", "./layouts/master")
+    }
+
+    initClientSession() {
+        this.#app.use(cookieParser(COOKIE_PARSER_SECRET_KEY));
+        this.#app.use(session({
+            secret: COOKIE_PARSER_SECRET_KEY,
+            resave: true,
+            saveUninitialized: true,
+            cookie: {
+                secure: true
+            }
+        }))
     }
 
     createRoutes() {
