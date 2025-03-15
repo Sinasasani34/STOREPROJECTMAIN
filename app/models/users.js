@@ -31,6 +31,7 @@ const UserSchema = new mongoose.Schema({
     bills: { type: [], default: [] },
     discount: { type: Number, default: 0 },
     brithday: { type: String },
+    token: { type: String, default: "" },
     Role: { type: String, default: "USER" },
     courses: { type: [mongoose.Types.ObjectId], ref: "course", default: [] },
     Products: { type: [mongoose.Types.ObjectId], ref: "product", default: [] },

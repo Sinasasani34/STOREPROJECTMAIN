@@ -17,14 +17,17 @@ class SupportController extends Controller {
     async login(req, res, next) {
         try {
             const { mobile } = req.body;
-            const user = await UserModel.findOne({ mobile });
+            const user = await UserModel.findOne({ mobile })
             if (!user) {
                 return res.render("login.ejs", {
                     error: "کاربری با این شماره موبایل یافت نشد"
-                });
+                })
             }
             const token = await SignAccessToken(user._id);
-            return res.json({token: token})
+            res.cookie("authorization", token, { signed: true, httpOnly: true, expires: new Date(Date.now() + 1000 * 60 * 60 * 1) })
+            user.token = token;
+            user.save();
+            return res.redirect("/support");
         } catch (error) {
             next(error)
         }
