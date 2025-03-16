@@ -1,18 +1,21 @@
 const { conversationModel } = require("../models/conversation");
-const moment = require("moment-jalali")
 module.exports = class NameSpaceSocketHandller {
     #io;
     constructor(io) {
         this.#io = io
     }
-
     initConnection() {
         this.#io.on("connection", async (socket) => {
-            const namespaces = await conversationModel.find({}, { title: 1, endpoint: 1 }).sort({ _id: -1 })
+            const namespaces = await conversationModel.find({}, {
+                title: 1,
+                endpoint: 1,
+                rooms: 1
+            }).sort({
+                _id: -1
+            })
             socket.emit("namespacesList", namespaces);
         })
     }
-
     async createNamespacesConnection() {
         const namespaces = await conversationModel.find({}, { title: 1, endpoint: 1, rooms: 1 }).sort({ _id: -1 })
         for (const namespace of namespaces) {
@@ -28,8 +31,11 @@ module.exports = class NameSpaceSocketHandller {
                     socket.join(roomName)
                     await this.getCountofOnlineUsers(namespace.endpoint, roomName)
                     const roomInfo = conversation.rooms.find(item => item.name === roomName)
+                    this.getNewMessage(socket);
                     socket.emit("roomInfo", roomInfo)
-                    this.getNewMessage(socket)
+                    this.getNewMessage(socket);
+                    this.getNewLocation(socket);
+                    this.uploadFiles(socket)
                     socket.on("disconnect", async () => {
                         await this.getCountofOnlineUsers(namespace.endpoint, roomName)
                     })
@@ -45,14 +51,40 @@ module.exports = class NameSpaceSocketHandller {
 
     getNewMessage(socket) {
         socket.on("newMessage", async (data) => {
-            const { message, roomName, endpoint } = data;
-            await conversationModel.updateOne({ endpoint, "rooms.name": roomName }, { $push: {
-                "rooms.$.messages": {
-                    sender: "67319ee3c60952f68e0c2b52",
-                    message,
-                    dateTime: Date.now()
+            const { message, roomName, endpoint, sender } = data;
+            await conversationModel.updateOne({ endpoint, "rooms.name": roomName }, {
+                $push: {
+                    "rooms.$.messages": {
+                        sender,
+                        message,
+                        dateTime: Date.now()
+                    }
                 }
-            }})
+            })
+            this.#io.of(`/${endpoint}`).in(roomName).emit("confirmMessage", data)
         })
+    }
+    getNewLocation(socket){
+        socket.on("newLocation", async data => {
+            const {location, roomName, endpoint, sender} = data
+            await conversationModel.updateOne({endpoint, "rooms.name": roomName}, {
+                $push : {
+                    "rooms.$.locations" : {
+                        sender,
+                        location, 
+                        dateTime: Date.now()
+                    } 
+                }
+            })
+            this.#io.of(`/${endpoint}`).in(roomName).emit("confirmLocation", data)
+        })
+    }
+    uploadFiles(socket){
+        socket.on("upload", ({file, filename}, callback) => {
+            const ext = path.extname(filename)
+            fs.writeFile("public/uploads/sockets/" + String(Date.now() + ext) , file, (err) => {
+              callback({ message: err ? "failure" : "success" });
+            });
+        });
     }
 }

@@ -14,6 +14,7 @@ const { socketHandller } = require("./socket.io");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const { COOKIE_PARSER_SECRET_KEY } = require("./utils/constans");
+const { clientHelper } = require("./utils/client");
 
 module.exports = class Application {
     #app = express();
@@ -27,6 +28,7 @@ module.exports = class Application {
         this.connectToMongoDB();
         this.initRedis();
         this.createServer();
+        this.initClientSession();
         this.createRoutes();
         this.errorHandling();
     }
@@ -107,7 +109,11 @@ module.exports = class Application {
         this.#app.set("views", "resource/views");
         this.#app.set("layout extractStyles", true)
         this.#app.set("layout extractScripts", true)
-        this.#app.set("layout", "./layouts/master")
+        this.#app.set("layout", "./layouts/master");
+        this.#app.use((req, res, next) => {
+            this.#app.locals = clientHelper(req, res);
+            next();
+        })
     }
 
     initClientSession() {
